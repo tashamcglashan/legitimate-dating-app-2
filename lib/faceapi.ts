@@ -1,52 +1,63 @@
-// Loads face-api (vladmandic build) once and its models.
-// Returns a Promise that resolves when models are ready.
-let loadPromise: Promise<void> | null = null;
+// /lib/faceapi.ts
+// Load vladmandic face-api script exactly once and ensure models are ready.
+
+let ready: Promise<void> | null = null;
 
 export function loadFaceApi(): Promise<void> {
-  if (typeof window === "undefined") {
-    // server guard
-    return Promise.resolve();
-  }
-  if ((window as any).faceapi && loadPromise) {
-    return loadPromise;
-  }
+  if (typeof window === "undefined") return Promise.resolve();
 
-  loadPromise = new Promise<void>((resolve, reject) => {
-    try {
-      // If script already present
-      if ((window as any).faceapi) {
-        const fa = (window as any).faceapi;
-        loadModels(fa).then(resolve).catch(reject);
-        return;
+  if (ready) return ready;
+
+  ready = new Promise<void>((resolve, reject) => {
+    const onScriptReady = async () => {
+      try {
+        const fa: any = (window as any).faceapi;
+        await loadModels(fa); // local first, then fallback
+        resolve();
+      } catch (e) {
+        reject(e);
       }
+    };
 
-      const script = document.createElement("script");
-      script.src =
-        "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.min.js";
-      script.async = true;
-      script.onload = async () => {
-        try {
-          const fa = (window as any).faceapi;
-          await loadModels(fa);
-          resolve();
-        } catch (e) {
-          reject(e);
-        }
-      };
-      script.onerror = () => reject(new Error("Failed to load face-api script"));
-      document.body.appendChild(script);
-    } catch (err) {
-      reject(err);
+    // If script already present, just load models
+    if ((window as any).faceapi) {
+      onScriptReady();
+      return;
     }
+
+    // Inject script once
+    const script = document.createElement("script");
+    script.src =
+      "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.min.js";
+    script.async = true;
+    script.onload = onScriptReady;
+    script.onerror = () => reject(new Error("Failed to load face-api script"));
+    document.body.appendChild(script);
   });
 
-  return loadPromise;
+  return ready;
 }
 
 async function loadModels(faceapi: any) {
-  const MODEL_URL =
+  // 1) Try local models in /public/models (recommended)
+  const LOCAL = "/models";
+
+  // 2) Fallback to CDN if local files aren’t found
+  const CDN =
     "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model";
-  await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
-  await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
-  //await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+
+  // Helper: try a base URL, fall back if it fails
+  async function tryBase(base: string) {
+    await faceapi.nets.tinyFaceDetector.loadFromUri(base);
+    await faceapi.nets.faceLandmark68Net.loadFromUri(base);
+    await faceapi.nets.faceRecognitionNet.loadFromUri(base);
+  }
+
+  try {
+    await tryBase(LOCAL);
+    // console.log("FaceAPI models loaded from /models");
+  } catch {
+    await tryBase(CDN);
+    // console.log("FaceAPI models loaded from CDN");
+  }
 }

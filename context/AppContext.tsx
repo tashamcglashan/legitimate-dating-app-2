@@ -23,6 +23,7 @@ export type OnboardingData = {
 type AppState = {
   onboarding: OnboardingData;
   setOnboarding: (d: OnboardingData) => void;
+  isVerified: boolean;
 };
 
 const DEFAULT_FORM: OnboardingData = {

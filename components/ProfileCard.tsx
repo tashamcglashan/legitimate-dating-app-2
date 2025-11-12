@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useApp } from "@/context/AppContext";
-import { Check, Heart } from "@/lib/icons";
+import { Check, Heart } from "lucide-react";
 
 export default function ProfileCard() {
   const { profiles } = useApp();
@@ -33,7 +33,7 @@ export default function ProfileCard() {
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-semibold">{profile.name}</h3>
               {profile.verified && (
-                <Check className="w-5 h-5 text-green-500" title="Verified" />
+                <Check className="w-5 h-5 text-green-500" title = "Verified" />
               )}
             </div>
             <p className="text-gray-600">

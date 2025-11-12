@@ -94,43 +94,43 @@ export default function OnboardingForm() {
   const next = () => setStep((s) => Math.min(3, s + 1));
   const back = () => setStep((s) => Math.max(1, s - 1));
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.name.trim()) return alert("Please enter your name.");
-    if (!/^\d+$/.test(form.age)) return alert("Age must be a number.");
-    if (!form.country.trim()) return alert("Please choose your country.");
-    if (form.languages.length === 0) return alert("Pick at least one language.");
-    if (step !==3) return;
-    setOnboarding({ ...form, verified: true });
-    router.push("/profile");
-  };
-
   // Handle multi-select languages
   const onLanguagesChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected: string[] = Array.from(e.target.selectedOptions).map((o) => o.value);
     update("languages", selected);
-
-    function handleKeyDown(e: React.KeyboardEvent<HTMLFormElement>) {
-        const target = e.target as HTMLElement;
-        const isTextArea = target.tagName.toLowerCase() === "textarea";
-        if (!isTextArea && e.key === "Enter") {
-          e.preventDefault();
-          if (step < 3) next(); // treat Enter like “Next” on steps 1–2
-        }
-      }
   };
-// ✅ put the handler RIGHT HERE (inside the component)
-const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+
+  // ⬇️ Prevent Enter from submitting early on steps 1–2
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
     const target = e.target as HTMLElement;
     const isTextArea = target.tagName.toLowerCase() === "textarea";
     if (!isTextArea && e.key === "Enter") {
       e.preventDefault();
-      if (step < 3) next(); // treat Enter like “Next” on steps 1–2
+      if (step < 3) next();
     }
   };
+
+  // Only finish on step 3
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (step < 3) {
+      next();
+      return;
+    }
+
+    // Final step (3): minimal validation + save + go
+    if (!form.familyPlans) return alert("Please choose your family plans.");
+    if (!form.education) return alert("Please choose your education.");
+    if (!form.bio.trim()) return alert("Please write a short bio.");
+
+    setOnboarding({ ...form, verified: true });
+    router.push("/profile");
+  }
+
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       onKeyDown={handleKeyDown}
       className="max-w-2xl mx-auto bg-white rounded-xl p-8 shadow space-y-6"
     >
@@ -173,7 +173,7 @@ const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
             />
           </div>
 
-          {/* Location (free text) */}
+          {/* Location */}
           <div className="sm:col-span-2">
             <label className="block text-sm font-medium mb-1">Location</label>
             <input
@@ -184,7 +184,7 @@ const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
             />
           </div>
 
-          {/* Country (dropdown) */}
+          {/* Country */}
           <div>
             <label className="block text-sm font-medium mb-1">Country</label>
             <select
@@ -199,7 +199,7 @@ const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
             </select>
           </div>
 
-          {/* State/Region (dropdown) */}
+          {/* State/Region */}
           <div>
             <label className="block text-sm font-medium mb-1">State/Region</label>
             <select

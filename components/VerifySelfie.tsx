@@ -1,4 +1,5 @@
 "use client";
+/* global faceapi */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { startCamera, stopCamera } from "@/lib/camera";
 import { loadFaceApi } from "@/lib/faceapi";
@@ -12,7 +13,7 @@ export default function VerifySelfie() {
   const [faceApiReady, setFaceApiReady] = useState(false);
   const [selfieVerified, setSelfieVerified] = useState(false);
 
-  // load face-api once
+  // load face-api once (script + models)
   useEffect(() => {
     let mounted = true;
     loadFaceApi()
@@ -26,8 +27,8 @@ export default function VerifySelfie() {
     };
   }, []);
 
-  // draw helper: size canvas to match video
-  const syncCanvasToVideo = () => {
+  // make canvas match the video’s actual pixel size (not just CSS)
+  const syncCanvasToVideo = useCallback(() => {
     const v = videoRef.current;
     const c = canvasRef.current;
     if (!v || !c) return;
@@ -35,9 +36,9 @@ export default function VerifySelfie() {
       c.width = v.videoWidth;
       c.height = v.videoHeight;
     }
-  };
+  }, []);
 
-  // detection loop refs so we can stop cleanly
+  // detection loop controls
   const rafId = useRef<number | null>(null);
   const consecutiveHits = useRef(0);
 
@@ -49,46 +50,43 @@ export default function VerifySelfie() {
   const startDetection = useCallback(() => {
     const v = videoRef.current;
     const c = canvasRef.current;
-    const faceapi: any = (window as any).faceapi;
-    if (!v || !c || !faceapi) return;
-  
+    const fa: any = (window as any).faceapi;
+    if (!v || !c || !fa) return;
+
     const ctx = c.getContext("2d");
-    const options = new faceapi.TinyFaceDetectorOptions({
+    const options = new fa.TinyFaceDetectorOptions({
       inputSize: 416,
       scoreThreshold: 0.5,
     });
-  
+
     const loop = async () => {
       try {
         syncCanvasToVideo();
         ctx?.clearRect(0, 0, c.width, c.height);
-  
-        const det = await faceapi.detectSingleFace(v, options).withFaceLandmarks();
-  
+
+        const det = await fa.detectSingleFace(v, options).withFaceLandmarks();
+
         if (det) {
-          // draw detections
-          if (faceapi.draw) {
-            faceapi.draw.drawDetections(c, [det]);
-            faceapi.draw.drawFaceLandmarks(c, [det]);
+          // draw
+          if (fa.draw) {
+            fa.draw.drawDetections(c, det);
+            fa.draw.drawFaceLandmarks(c, det);
           } else if (ctx) {
             const { x, y, width, height } = det.detection.box;
             ctx.strokeStyle = "lime";
             ctx.lineWidth = 2;
             ctx.strokeRect(x, y, width, height);
           }
-  
-          // verification rules
+
+          // simple verification: steady & confident face
           const conf = det.detection.score ?? 0;
-          const { height } = det.detection.box;
-          const bigEnough = height >= c.height * 0.2;
+          const bigEnough = det.detection.box.height >= c.height * 0.2;
           const confident = conf >= 0.5;
-  
-          if (bigEnough && confident) {
-            consecutiveHits.current += 1;
-          } else {
-            consecutiveHits.current = 0;
-          }
-  
+
+          consecutiveHits.current = bigEnough && confident
+            ? consecutiveHits.current + 1
+            : 0;
+
           if (!selfieVerified && consecutiveHits.current >= 8) {
             setSelfieVerified(true);
             setStatus("✓ Face detected and steady — verified!");
@@ -104,15 +102,13 @@ export default function VerifySelfie() {
       } catch (e) {
         console.error("faceapi loop error", e);
       } finally {
-        // 🔹 This keeps the detection running
         rafId.current = requestAnimationFrame(loop);
       }
     };
-  
-    // ✅ Start the loop
+
     rafId.current = requestAnimationFrame(loop);
-  }, [selfieVerified]);
-  
+  }, [selfieVerified, syncCanvasToVideo]);
+
   const handleStart = useCallback(async () => {
     try {
       if (!faceApiReady) {
@@ -127,9 +123,18 @@ export default function VerifySelfie() {
       setIsCapturing(true);
       setStatus("Camera started. Center your face in the frame.");
 
-      // size canvas and start detection
-      syncCanvasToVideo();
-      startDetection();
+      // ensure video has dimensions before starting loop
+      const v = videoRef.current;
+      if (!v) return;
+      if (v.readyState >= 2) {
+        syncCanvasToVideo();
+        startDetection();
+      } else {
+        v.onloadeddata = () => {
+          syncCanvasToVideo();
+          startDetection();
+        };
+      }
     } catch (err: any) {
       const name = err?.name;
       if (name === "NotAllowedError") setStatus("Permission denied. Please allow camera access.");
@@ -140,7 +145,7 @@ export default function VerifySelfie() {
       stopDetection();
       stopCamera(videoRef.current);
     }
-  }, [faceApiReady, startDetection, stopDetection]);
+  }, [faceApiReady, startDetection, stopDetection, syncCanvasToVideo]);
 
   const handleStop = useCallback(() => {
     stopDetection();
@@ -187,7 +192,6 @@ export default function VerifySelfie() {
           muted
           className="w-full h-64 bg-black rounded-lg object-cover"
         />
-        {/* overlay for boxes/landmarks */}
         <canvas
           ref={canvasRef}
           className="absolute inset-0 w-full h-64 pointer-events-none"
@@ -195,31 +199,30 @@ export default function VerifySelfie() {
       </div>
 
       {status && (
-  <div
-    className={`mt-4 text-sm p-3 rounded-lg ${
-      status.startsWith("✓")
-        ? "bg-green-50 text-green-700"
-        : "bg-blue-50 text-blue-700"
-    }`}
-  >
-    {status}
-  </div>
-)}
+        <div
+          className={`mt-4 text-sm p-3 rounded-lg ${
+            status.startsWith("✓")
+              ? "bg-green-50 text-green-700"
+              : "bg-blue-50 text-blue-700"
+          }`}
+        >
+          {status}
+        </div>
+      )}
 
-{selfieVerified && (
-  <div className="mt-3 text-sm p-2 rounded-lg bg-green-100 text-green-800">
-    ✓ Verified! You can continue.
-  </div>
-)}
-
-{selfieVerified && (
-  <a
-    href="/onboarding"
-    className="inline-block mt-4 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700"
-  >
-    Continue to Onboarding
-  </a>
-)}
+      {selfieVerified && (
+        <>
+          <div className="mt-3 text-sm p-2 rounded-lg bg-green-100 text-green-800">
+            ✓ Verified! You can continue.
+          </div>
+          <a
+            href="/onboarding"
+            className="inline-block mt-4 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700"
+          >
+            Continue to Onboarding
+          </a>
+        </>
+      )}
     </div>
   );
 }
