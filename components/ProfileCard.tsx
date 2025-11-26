@@ -1,7 +1,17 @@
 "use client";
 
 import { OnboardingData } from "@/context/AppContext";
-import { Check, MapPin, Globe, User, Ruler, HeartHandshake, PawPrint, BookOpen, GraduationCap } from "lucide-react";
+import {
+  Check,
+  MapPin,
+  Globe,
+  User,
+  Ruler,
+  HeartHandshake,
+  PawPrint,
+  BookOpen,
+  GraduationCap,
+} from "lucide-react";
 
 type ProfileCardProps = {
   onboarding: OnboardingData;
@@ -11,18 +21,16 @@ export default function ProfileCard({ onboarding }: ProfileCardProps) {
   const {
     name,
     age,
-    sex,
     location,
     country,
     state,
-    languages,
+    languages = [],
     height,
     denomination,
     dietary,
     pets,
     familyPlans,
     education,
-    ethnicity,
     bio,
     verified,
   } = onboarding;
@@ -50,7 +58,7 @@ export default function ProfileCard({ onboarding }: ProfileCardProps) {
         )}
       </div>
 
-      {/* Bio Section */}
+      {/* Bio */}
       <section>
         <h2 className="text-lg font-semibold text-gray-800 mb-2">About Me</h2>
         <p className="text-gray-700 leading-relaxed">
@@ -58,12 +66,10 @@ export default function ProfileCard({ onboarding }: ProfileCardProps) {
         </p>
       </section>
 
-      {/* Divider */}
       <div className="border-t border-gray-200"></div>
 
-      {/* Details Grid */}
+      {/* Details */}
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <Detail label="Sex" value={sex} icon={<User size={18} />} />
         <Detail label="Languages" value={languages.join(", ")} icon={<Globe size={18} />} />
         <Detail label="Height" value={height} icon={<Ruler size={18} />} />
         <Detail label="Denomination" value={denomination} icon={<BookOpen size={18} />} />
@@ -71,7 +77,6 @@ export default function ProfileCard({ onboarding }: ProfileCardProps) {
         <Detail label="Pets" value={pets} icon={<PawPrint size={18} />} />
         <Detail label="Family Plans" value={familyPlans} icon={<HeartHandshake size={18} />} />
         <Detail label="Education" value={education} icon={<GraduationCap size={18} />} />
-        <Detail label="Ethnicity" value={ethnicity} icon={<User size={18} />} />
       </section>
     </div>
   );
