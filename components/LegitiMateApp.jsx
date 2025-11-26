@@ -830,6 +830,13 @@ useEffect(() => {
   // ------------------------------
   // Profile Card (for Discover feed)
   // ------------------------------
+  interface ProfileCardProps {
+    profile: any;      // you can strict-type later
+    onLike?: () => void;
+    onPass?: () => void;
+    isVerified?: boolean;
+  }
+  
   const ProfileCard = ({ profile, onLike, onPass, isVerified }) => {
     const [currentPhoto, setCurrentPhoto] = useState(0);
     const router = useRouter();
