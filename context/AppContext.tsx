@@ -59,7 +59,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // ✅ Load from localStorage on first mount
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("onboarding");
+      const raw = localStorage.getItem("lm_user");
       if (raw) {
         const parsed = JSON.parse(raw);
         // merge with EMPTY_FORM so all fields exist
@@ -77,9 +77,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setOnboardingState(d);
     try {
       if (d) {
-        localStorage.setItem("onboarding", JSON.stringify(d));
+        localStorage.setItem("lm_user", JSON.stringify(d));
       } else {
-        localStorage.removeItem("onboarding");
+        localStorage.removeItem("lm_user");
       }
     } catch (err) {
       console.error("Failed to save onboarding to localStorage", err);
