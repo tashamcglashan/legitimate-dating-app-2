@@ -89,7 +89,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const isVerified = !!onboarding?.verified;
 
   return (
-    <AppCtx.Provider value={{ onboarding, setOnboarding, isVerified, hydrated }}>
+    <AppCtx.Provider value={{ onboarding, setOnboarding, isVerified: onboarding?.verified ?? false, hydrated }}>
       {children}
     </AppCtx.Provider>
   );
