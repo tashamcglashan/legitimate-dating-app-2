@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/context/AppContext";
+import { EMPTY_FORM } from "@/context/AppContext";
+
 
 // ----------------------
 // FORM SHAPE
@@ -163,11 +165,11 @@ export default function OnboardingForm() {
     }
 
     setOnboarding({
-      ...form,
+      ...EMPTY_FORM,   // <-- ensures ALL required fields exist
+      ...form,         // <-- user-entered values
       verified: true,
-      sex: form.sex ?? "",         // ⭐ ensure required field exists
-      photos: form.photos ?? [],    // ⭐ ensure required field exists
     });
+    
   
     router.push("/profile");
   }
