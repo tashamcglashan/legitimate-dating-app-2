@@ -1,9 +1,11 @@
 "use client";
+
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 export type OnboardingData = {
   name: string;
   age: string;
+  sex: string;
   location: string;
   country: string;
   state: string;
@@ -16,19 +18,22 @@ export type OnboardingData = {
   education: string;
   ethnicity: string;
   bio: string;
-  photos: string[];   // ← store as base64 data URLs so it survives reload
+  photos: string[];
   verified: boolean;
 };
 
 type AppState = {
-  onboarding: OnboardingData;
-  setOnboarding: (d: OnboardingData) => void;
+  onboarding: OnboardingData | null;
+  setOnboarding: (d: OnboardingData | null) => void;
   isVerified: boolean;
+  hydrated: boolean;
 };
 
-const DEFAULT_FORM: OnboardingData = {
+// ⬇️ Make sure this is defined BEFORE AppProvider and BEFORE it’s used
+const EMPTY_FORM: OnboardingData = {
   name: "",
   age: "",
+  sex: "",
   location: "",
   country: "",
   state: "",
@@ -41,36 +46,50 @@ const DEFAULT_FORM: OnboardingData = {
   education: "",
   ethnicity: "",
   bio: "",
-  photos: [],        // ← start empty
+  photos: [],
   verified: false,
 };
 
 const AppCtx = createContext<AppState | null>(null);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [onboarding, setOnboarding] = useState<OnboardingData>(DEFAULT_FORM);
+  const [onboarding, setOnboardingState] = useState<OnboardingData | null>(null);
+  const [hydrated, setHydrated] = useState(false);
 
-  // hydrate from localStorage
+  // ✅ Load from localStorage on first mount
   useEffect(() => {
     try {
       const raw = localStorage.getItem("onboarding");
       if (raw) {
         const parsed = JSON.parse(raw);
-        setOnboarding({ ...DEFAULT_FORM, ...parsed });
+        // merge with EMPTY_FORM so all fields exist
+        setOnboardingState({ ...EMPTY_FORM, ...parsed });
       }
-    } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    } catch (err) {
+      console.error("Failed to load onboarding from localStorage", err);
+    } finally {
+      setHydrated(true); // we’re done trying to load
+    }
   }, []);
 
-  // persist to localStorage
-  useEffect(() => {
+  // ✅ Single function to update + persist
+  const setOnboarding = (d: OnboardingData | null) => {
+    setOnboardingState(d);
     try {
-      localStorage.setItem("onboarding", JSON.stringify(onboarding));
-    } catch {}
-  }, [onboarding]);
+      if (d) {
+        localStorage.setItem("onboarding", JSON.stringify(d));
+      } else {
+        localStorage.removeItem("onboarding");
+      }
+    } catch (err) {
+      console.error("Failed to save onboarding to localStorage", err);
+    }
+  };
+
+  const isVerified = !!onboarding?.verified;
 
   return (
-    <AppCtx.Provider value={{ onboarding, setOnboarding }}>
+    <AppCtx.Provider value={{ onboarding, setOnboarding, isVerified, hydrated }}>
       {children}
     </AppCtx.Provider>
   );

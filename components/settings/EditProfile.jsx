@@ -52,10 +52,10 @@ const EditProfile = ({ user, setUser, onBack }) => {
     <div className="h-full overflow-y-auto pb-20">
       <div className="max-w-2xl mx-auto p-4">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Edit Profile</h2>
+          <h2 className="text-2xl font-bold text-black">Edit Profile</h2>
           <button
             onClick={onBack}
-            className="px-3 py-2 rounded-lg border hover:bg-gray-50"
+            className="px-3 py-2 rounded-lg border hover:bg-gray-50 text-black cursor-pointer"
           >
             Back
           </button>
@@ -65,97 +65,97 @@ const EditProfile = ({ user, setUser, onBack }) => {
           {/* Basic info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Name</label>
+              <label className="block text-sm font-medium mb-1 text-black">Name</label>
               <input
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black"
                 value={form.name}
                 onChange={update("name")}
                 placeholder="Your name"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Age</label>
+              <label className="block text-sm font-medium mb-1 text-black">Age</label>
               <input
                 type="number"
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black"
                 value={form.age}
                 onChange={update("age")}
                 placeholder="25"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Country</label>
+              <label className="block text-sm font-medium mb-1 text-black">Country</label>
               <input
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black"
                 value={form.country}
                 onChange={update("country")}
                 placeholder="USA"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-black">
                 State/Province
               </label>
               <input
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black"
                 value={form.state}
                 onChange={update("state")}
                 placeholder="California"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Height</label>
+              <label className="block text-sm font-medium mb-1 text-black">Height</label>
               <input
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black"
                 value={form.height}
                 onChange={update("height")}
                 placeholder={`5'6"`}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-black">
                 Education
               </label>
               <input
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border text-black rounded-lg"
                 value={form.education}
                 onChange={update("education")}
                 placeholder="Bachelors Degree"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Religion</label>
+              <label className="block text-sm font-medium mb-1 text-black">Religion</label>
               <input
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black"
                 value={form.denomination}
                 onChange={update("denomination")}
                 placeholder="Non-religious"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Diet</label>
+              <label className="block text-sm font-medium mb-1 text-black">Diet</label>
               <input
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black"
                 value={form.dietary}
                 onChange={update("dietary")}
                 placeholder="Vegetarian"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Pets</label>
+              <label className="block text-sm font-medium mb-1 text-black">Pets</label>
               <input
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black"
                 value={form.pets}
                 onChange={update("pets")}
                 placeholder="Dog lover"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-black">
                 Family Plans
               </label>
               <input
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg text-black"
                 value={form.familyPlans}
                 onChange={update("familyPlans")}
                 placeholder="Want children"
@@ -165,10 +165,10 @@ const EditProfile = ({ user, setUser, onBack }) => {
 
           {/* Bio */}
           <div>
-            <label className="block text-sm font-medium mb-1">Bio</label>
+            <label className="block text-sm font-medium mb-1 text-black">Bio</label>
             <textarea
               rows={4}
-              className="w-full px-3 py-2 border rounded-lg"
+              className="w-full px-3 py-2 border rounded-lg text-black"
               value={form.bio}
               onChange={update("bio")}
               placeholder="Tell people about you…"
@@ -177,10 +177,10 @@ const EditProfile = ({ user, setUser, onBack }) => {
 
           {/* Interests */}
           <div>
-            <label className="block text-sm font-medium mb-2">Interests</label>
+            <label className="block text-sm font-medium mb-2 text-black">Interests</label>
             <div className="flex gap-2 mb-3">
               <input
-                className="flex-1 px-3 py-2 border rounded-lg"
+                className="flex-1 px-3 py-2 border rounded-lg text-black"
                 value={newInterest}
                 onChange={(e) => setNewInterest(e.target.value)}
                 placeholder="Add an interest"
@@ -213,24 +213,24 @@ const EditProfile = ({ user, setUser, onBack }) => {
 
           {/* Photos (simple counter for now) */}
           <div>
-            <label className="block text-sm font-medium mb-1">Photos</label>
+            <label className="block text-sm font-medium mb-1 text-black">Photos</label>
             <div className="flex items-center gap-3">
               <button
                 onClick={() =>
                   setForm((f) => ({ ...f, photos: Math.max(0, f.photos - 1) }))
                 }
-                className="px-3 py-2 border rounded-lg"
+                className="px-3 py-2 border rounded-lg text-black"
               >
                 −
               </button>
-              <span className="min-w-[3rem] text-center font-semibold">
+              <span className="min-w-[3rem] text-center font-semibold text-black">
                 {form.photos}
               </span>
               <button
                 onClick={() =>
                   setForm((f) => ({ ...f, photos: f.photos + 1 }))
                 }
-                className="px-3 py-2 border rounded-lg"
+                className="px-3 py-2 border rounded-lg text-black"
               >
                 +
               </button>
