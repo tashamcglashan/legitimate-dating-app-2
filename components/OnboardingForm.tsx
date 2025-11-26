@@ -162,7 +162,13 @@ export default function OnboardingForm() {
       return;
     }
 
-    setOnboarding({ ...form, verified: true });
+    setOnboarding({
+      ...form,
+      verified: true,
+      sex: form.sex ?? "",         // ⭐ ensure required field exists
+      photos: form.photos ?? [],    // ⭐ ensure required field exists
+    });
+  
     router.push("/profile");
   }
 
