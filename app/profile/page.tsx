@@ -8,8 +8,6 @@ export default function ProfilePage() {
   const { onboarding, isVerified } = useApp();
   const router = useRouter();
 
-  console.log("Profile onboarding:", onboarding, "isVerified:", isVerified);
-
   // If user has not finished onboarding / not verified
   if (!onboarding || !isVerified) {
     return (
@@ -30,13 +28,12 @@ export default function ProfilePage() {
     );
   }
 
-  // If user HAS a completed onboarding profile
   return (
     <main className="min-h-screen p-8 bg-gray-50">
       <div className="max-w-2xl mx-auto space-y-6">
-        <ProfileCard profile={onboarding} />
+        {/* ⭐ FIXED PROP NAME */}
+        <ProfileCard onboarding={onboarding} />
 
-        {/* 🔥 New button to go to Discover/Home */}
         <button
           type="button"
           onClick={() => router.push("/")}
