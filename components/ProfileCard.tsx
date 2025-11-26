@@ -21,6 +21,7 @@ export default function ProfileCard({ onboarding }: ProfileCardProps) {
   const {
     name,
     age,
+    sex,
     location,
     country,
     state,
