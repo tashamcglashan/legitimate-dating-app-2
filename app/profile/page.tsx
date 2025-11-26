@@ -34,7 +34,7 @@ export default function ProfilePage() {
   return (
     <main className="min-h-screen p-8 bg-gray-50">
       <div className="max-w-2xl mx-auto space-y-6">
-        <ProfileCard onboarding={onboarding} />
+        <ProfileCard profile={onboarding} />
 
         {/* 🔥 New button to go to Discover/Home */}
         <button
