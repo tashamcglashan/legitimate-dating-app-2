@@ -166,8 +166,7 @@ export default function OnboardingForm() {
 
     setOnboarding({
       ...EMPTY_FORM,   // <-- ensures ALL required fields exist
-      ...form, 
-      sex: form.sex || "",        // <-- user-entered values
+      ...form,         // <-- user-entered values
       verified: true,
     });
     
