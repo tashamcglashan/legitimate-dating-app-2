@@ -30,7 +30,7 @@ type AppState = {
 };
 
 // ⬇️ Make sure this is defined BEFORE AppProvider and BEFORE it’s used
-const EMPTY_FORM: OnboardingData = {
+export const EMPTY_FORM: OnboardingData = {
   name: "",
   age: "",
   sex: "",

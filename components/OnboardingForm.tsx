@@ -84,8 +84,13 @@ export default function OnboardingForm() {
   const { onboarding, setOnboarding } = useApp();
 
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState<FormShape>({ ...DEFAULT_FORM, ...(onboarding || {}) });
-
+  const [form, setForm] = useState<FormShape>({
+    ...DEFAULT_FORM,
+    ...(onboarding ?? {}),
+    sex: onboarding?.sex ?? "",
+  });
+  
+  
   const update = (k: keyof FormShape, v: any) =>
     setForm((f) => ({ ...f, [k]: v }));
 
@@ -165,10 +170,12 @@ export default function OnboardingForm() {
     }
 
     setOnboarding({
-      ...EMPTY_FORM,   // <-- ensures ALL required fields exist
-      ...form,         // <-- user-entered values
+      ...EMPTY_FORM,
+      ...form,
+      sex: form.sex || "",
       verified: true,
     });
+    
     
   
     router.push("/profile");
