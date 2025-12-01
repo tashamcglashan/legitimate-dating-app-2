@@ -25,8 +25,8 @@ import {
 } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
-import EditProfile from "./settings/EditProfile";
-import BlockedUsers from "./settings/BlockedUsers";
+import EditProfile from "@/components/settings/EditProfile";
+import BlockedUsers from "@/components/settings/BlockedUsers";
 
 const LegitiMateApp = () => {
   // Get app state from context
