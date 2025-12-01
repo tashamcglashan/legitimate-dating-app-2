@@ -113,14 +113,15 @@ const LegitiMateApp = () => {
   }, [notificationSettings]);
 
   // ⭐ Phase 2: In-app toast alerts
-  const [toastMessage, setToastMessage] = useState(null);
+const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const showToast = (message) => {
-    setToastMessage(message);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 4000);
-  };
+const showToast = (message: string) => {
+  setToastMessage(message);
+  setTimeout(() => {
+    setToastMessage(null);
+  }, 4000);
+};
+
 
   // ✅ NEW — SAFE REDIRECT EFFECT (add it here)
 useEffect(() => {
