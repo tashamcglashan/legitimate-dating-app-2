@@ -1,6 +1,6 @@
 "use client";
 
-import LegitiMateApp from "../components/LegitiMateApp";
+import LegitiMateApp from "./LegitiMateApp";
 
 export default function Page() {
   return <LegitiMateApp />;
