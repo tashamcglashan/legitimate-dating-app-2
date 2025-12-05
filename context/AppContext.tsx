@@ -34,6 +34,7 @@ type AppState = {
 export const EMPTY_FORM: OnboardingData = {
   name: "",
   age: "",
+  email: "",
   sex: "",
   location: "",
   country: "",
