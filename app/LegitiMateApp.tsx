@@ -1,5 +1,6 @@
 "use client";
 /* global faceapi */
+
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {

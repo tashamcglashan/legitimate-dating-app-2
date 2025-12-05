@@ -6,6 +6,7 @@ export type OnboardingData = {
   name: string;
   age: string;
   sex: string;
+  email: string;
   location: string;
   country: string;
   state: string;

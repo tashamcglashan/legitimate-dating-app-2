@@ -1,6 +1,7 @@
 export type OnboardingData = {
     name: string;
-    age: string;           // keep as string while typing
+    age: string;  
+    email:string;         // keep as string while typing
     location: string;
     country: string;
     state: string;
