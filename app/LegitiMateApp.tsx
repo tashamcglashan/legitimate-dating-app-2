@@ -211,7 +211,7 @@ useEffect(() => {
       familyPlans: "",
       education: "",
       bio: "",
-      photos: 0,
+      photos: [],
       verified: false,
     });
 

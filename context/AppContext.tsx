@@ -47,7 +47,7 @@ export const EMPTY_FORM: OnboardingData = {
   education: "",
   ethnicity: "",
   bio: "",
-  photos: [],
+  photos: string[],
   verified: false,
 };
 
