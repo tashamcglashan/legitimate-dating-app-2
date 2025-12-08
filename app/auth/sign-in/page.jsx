@@ -58,7 +58,18 @@ export default function SignInPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full p-2 border rounded-lg text-black"
             />
+            <p className="text-right mt-1">
+  <a
+    href="/auth/reset-password"
+    className="text-pink-600 text-sm font-medium hover:underline"
+  >
+    Forgot your password?
+  </a>
+</p>
+
           </div>
+
+
 
           <button
             type="submit"
