@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* ✅ Wrap everything in AppProvider */}
+        {/* ✅ Wrap everything in AppProvider please */}
         <AppProvider>{children}</AppProvider>
       </body>
     </html>
