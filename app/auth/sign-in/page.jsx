@@ -7,6 +7,30 @@ export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showReset, setShowReset] = useState(false);
+const [resetEmail, setResetEmail] = useState("");
+const [resetMessage, setResetMessage] = useState("");
+const [resetError, setResetError] = useState("");
+
+const handleForgotPassword = async (e) => {
+  e.preventDefault();
+  setResetMessage("");
+  setResetError("");
+
+  const supabase = createClient();
+
+  const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+    redirectTo: `${window.location.origin}/auth/reset-password`,
+  });
+
+  if (error) {
+    setResetError(error.message);
+    return;
+  }
+
+  setResetMessage("Reset link sent! Check your email.");
+};
+
 
   const handleSignIn = (e) => {
     e.preventDefault();
@@ -59,13 +83,48 @@ export default function SignInPage() {
               className="w-full p-2 border rounded-lg text-black"
             />
             <p className="text-right mt-1">
-  <a
-    href="/auth/reset-password"
+  <button
+    type="button"
+    onClick={() => setShowReset(true)}
     className="text-pink-600 text-sm font-medium hover:underline"
   >
     Forgot your password?
-  </a>
+  </button>
 </p>
+
+{showReset && (
+  <form
+    onSubmit={handleForgotPassword}
+    className="mt-4 p-4 border rounded-lg bg-gray-50"
+  >
+    <label className="block text-sm text-black mb-1">
+      Enter your email
+    </label>
+
+    <input
+      type="email"
+      required
+      value={resetEmail}
+      onChange={(e) => setResetEmail(e.target.value)}
+      className="w-full p-2 border rounded-lg text-black mb-3"
+    />
+
+    <button
+      type="submit"
+      className="w-full bg-pink-600 text-white py-2 rounded-lg font-semibold hover:bg-pink-700 cursor-pointer"
+    >
+      Send Reset Link
+    </button>
+
+    {resetMessage && (
+      <p className="mt-2 text-green-700 text-sm">{resetMessage}</p>
+    )}
+    {resetError && (
+      <p className="mt-2 text-red-700 text-sm">{resetError}</p>
+    )}
+  </form>
+)}
+
 
           </div>
 
