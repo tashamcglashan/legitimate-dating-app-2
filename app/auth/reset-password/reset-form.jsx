@@ -18,9 +18,12 @@ export default function ResetPasswordForm() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!token || type !== "recovery") {
-      setError("Invalid or expired reset link.");
-    }
+    if (token === null || type === null) return; // wait until loaded
+
+if (!token || type !== "recovery") {
+  setError("Invalid or expired reset link.");
+}
+
   }, [token, type]);
 
   const handleResetPassword = async (e) => {
