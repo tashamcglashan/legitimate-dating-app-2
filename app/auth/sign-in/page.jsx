@@ -38,26 +38,25 @@ export default function SignInPage() {
   // ---------- SIGN IN ----------
   const handleSignIn = async (e) => {
     e.preventDefault();
-
+    console.log("SIGN IN CLICKED");
+  
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
   
-    console.log("SIGN IN ERROR:", error);
+    console.log("SIGN IN RESPONSE:", { data, error });
   
     if (error) {
       alert(error.message);
       return;
     }
   
-
-    // keep stored onboarding & verification as-is
-    localStorage.setItem("lm_user", JSON.stringify(userData));
-
+    console.log("SIGN IN SUCCESS:", data);
+  
     router.push("/");
   };
-
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-white p-6">
       <div className="w-full max-w-md bg-white shadow-md rounded-xl p-6 border border-gray-200">
