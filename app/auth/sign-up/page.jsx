@@ -114,7 +114,10 @@ export default function SignupPage() {
           >
             {isSubmitting ? "Creating account..." : "Sign up"}
           </button>
+          <p>Check Spam Folder</p>
         </form>
+        
+
 
         <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs sm:text-sm text-gray-600">
           <span>Already have an account?</span>
@@ -124,6 +127,7 @@ export default function SignupPage() {
           >
             Log in instead
           </Link>
+
         </div>
       </div>
     </div>

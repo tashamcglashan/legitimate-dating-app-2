@@ -36,22 +36,21 @@ export default function SignInPage() {
   };
 
   // ---------- SIGN IN ----------
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
 
-    const saved = localStorage.getItem("lm_user");
-
-    if (!saved) {
-      alert("No account found. Please sign up first.");
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+  
+    console.log("SIGN IN ERROR:", error);
+  
+    if (error) {
+      alert(error.message);
       return;
     }
-
-    const userData = JSON.parse(saved);
-
-    if (userData.email !== email) {
-      alert("Email does not match any existing account. Please sign up first.");
-      return;
-    }
+  
 
     // keep stored onboarding & verification as-is
     localStorage.setItem("lm_user", JSON.stringify(userData));
